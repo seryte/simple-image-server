@@ -9,6 +9,7 @@ PASSWD = 'password'
 
 PUBLIC_DIR = None
 
+
 def _disp_login(request, error='', del_cookies=[]):
     """Display login interface."""
     params = {}
@@ -26,22 +27,25 @@ def _disp_login(request, error='', del_cookies=[]):
 def _disp_images(request):
     """Display images."""
     params = request.POST
-    is_login = False
-    if 'username' in params and 'userpass' in params:
-        username = params['username']
-        userpass = params['userpass']
-        is_login = _can_login(username, userpass)
-    if 'sid' in request.cookies:
-        sid = request.cookies['sid']
-        is_login = _has_valid_cookie(sid)
-    if not is_login:
-        return _disp_login(request, u'Failur in login!!!')
-    image_paths = []
-    for r, d, fs in os.walk(PUBLIC_DIR):
-        for f in fs:
-            _p = os.path.join(r, f)
-            _f = _p.replace(PUBLIC_DIR, '').lstrip('/')
-            image_paths.append(os.path.join('images', _f))
+    # is_login = True
+    # if 'username' in params and 'userpass' in params:
+    #    username = params['username']
+    #    userpass = params['userpass']
+    #    is_login = _can_login(username, userpass)
+    # if 'sid' in request.cookies:
+    #    sid = request.cookies['sid']
+    #    is_login = _has_valid_cookie(sid)
+    # if not is_login:
+    #    return _disp_login(request, u'Failur in login!!!')
+    # image_paths = []
+    image_paths = [os.path.join('images', os.path.join(root, pic).replace(PUBLIC_DIR, '').lstrip('/')) for
+                   root, dirs, files in os.walk(PUBLIC_DIR) for pic in files if
+                   pic.endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))]
+    # for r, d, fs in os.walk(PUBLIC_DIR):
+    #    for f in fs:
+    #        _p = os.path.join(r, f)
+    #        _f = _p.replace(PUBLIC_DIR, '').lstrip('/')
+    #        image_paths.append(os.path.join('images', _f))
     params = {}
     params['images'] = image_paths
     response = render_to_response(
@@ -69,12 +73,12 @@ def _has_valid_cookie(cookie):
 
 def _add_routes(config):
     """Add Root information."""
-    config.add_route('login', '/login')
-    config.add_view(_disp_login, route_name='login')
+    # config.add_route('login', '/login')
+    # config.add_view(_disp_login, route_name='login')
     config.add_route('images', '/images')
     config.add_view(_disp_images, route_name='images')
-    config.add_route('logout', '/logout')
-    config.add_view(_logout, route_name='logout')
+    # config.add_route('logout', '/logout')
+    # config.add_view(_logout, route_name='logout')
     config.add_static_view('static', 'static')
     config.add_static_view('images', PUBLIC_DIR)
 
@@ -94,6 +98,7 @@ def execute():
 
 if __name__ == '__main__':
     import argparse
+
     p = argparse.ArgumentParser(description='Simple image viewer.')
     p_h = 'Public image directory. If you want to see sample, input `images/sample`'
     p.add_argument('public_dir', help=p_h)
@@ -108,5 +113,5 @@ if __name__ == '__main__':
         'mako.directories': [
             os.path.abspath(os.path.join(here, 'templates')),
         ],
-        }
+    }
     execute()
