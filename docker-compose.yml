@@ -7,4 +7,5 @@ services:
       - "8001:8999"
     volumes:
       - /tmp:/data/resource/
+      - /etc/localtime:/etc/localtime
     restart: always
