@@ -29,7 +29,7 @@
     })();
   </script>
 
-  <h1>Photo List</h1>
+  <h1>Photo List ${len(images)}</h1>
   <div id="kumalinks" class="kumaimages example thumbs">
     % for i in images:
       <a href="${i}">
