@@ -50,6 +50,10 @@ If you want to execute sample,
 ```bash
 python main.py sample
 ```
+web browsing
+```java
+http://192.168.10.13:9093/images
+```
 
 ## Plugin
 
